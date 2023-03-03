@@ -17,21 +17,22 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
-// mongoose.connect(process.env.DB_MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
+mongoose.connect(process.env.DB_MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.DB_MONGO_URI);
+// const connectDB = async () => {
+//   try {
+//     const conn = await mongoose.connect(process.env.DB_MONGO_URI);
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.log(error);
-  }
-};
-connectDB();
+//     console.log(`MongoDB Connected: ${conn.connection.host}`);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// connectDB();
 
 // PORT
 const PORT = process.env.PORT || 5000;
