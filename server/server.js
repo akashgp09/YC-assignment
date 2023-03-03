@@ -17,10 +17,21 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.DB_MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.DB_MONGO_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.DB_MONGO_URI);
+
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+connectDB();
 
 // PORT
 const PORT = process.env.PORT || 5000;
@@ -48,10 +59,6 @@ app.use(
   })
 );
 
-// set up routes
-app.use("/", contactRouter);
-app.use("/auth", authRoutes);
-
 if (process.env.NODE_ENV === "production") {
   // Set static folder
   app.use(express.static("client/build"));
@@ -60,6 +67,9 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+// set up routes
+app.use("/", contactRouter);
+app.use("/auth", authRoutes);
 
 const authCheck = (req, res, next) => {
   if (!req.user) {
