@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Modal, Button } from "react-bootstrap";
-function DisplayContact({ contacts, renderMyData }) {
+function DisplayContact({ contacts, renderMyData, owner }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -21,8 +21,8 @@ function DisplayContact({ contacts, renderMyData }) {
     try {
       await fetch(
         process.env.NODE_ENV === "production"
-          ? `${process.env.REACT_APP_WEBSITE_URL}/delete`
-          : "http://localhost:5000/delete",
+          ? `${process.env.REACT_APP_WEBSITE_URL}/contact/delete`
+          : "http://localhost:5000/contact/delete",
         {
           method: "POST",
           headers: {
@@ -35,7 +35,7 @@ function DisplayContact({ contacts, renderMyData }) {
           }),
         }
       );
-      renderMyData();
+      renderMyData(owner);
     } catch (err) {
       console.log(err);
     }
@@ -45,8 +45,8 @@ function DisplayContact({ contacts, renderMyData }) {
     try {
       await fetch(
         process.env.NODE_ENV === "production"
-          ? `${process.env.REACT_APP_WEBSITE_URL}/edit`
-          : "http://localhost:5000/edit",
+          ? `${process.env.REACT_APP_WEBSITE_URL}/contact/edit`
+          : "http://localhost:5000/contact/edit",
         {
           method: "POST",
           headers: {
@@ -61,7 +61,7 @@ function DisplayContact({ contacts, renderMyData }) {
           }),
         }
       );
-      renderMyData();
+      renderMyData(owner);
     } catch (err) {
       console.log(err);
     }
@@ -72,8 +72,8 @@ function DisplayContact({ contacts, renderMyData }) {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
             <th scope="col"></th>
             <th scope="col"></th>
           </tr>

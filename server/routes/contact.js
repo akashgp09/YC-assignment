@@ -2,8 +2,8 @@ const express = require("express");
 const Contact = require("../model/contact");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  let contacts = await Contact.find();
+router.post("/contacts", async (req, res) => {
+  let contacts = await Contact.find({ owner: req.body.owner });
   if (contacts) {
     return res.status(200).json(contacts);
   }
@@ -13,6 +13,7 @@ router.post("/add", async (req, res) => {
   let contact = new Contact({
     name: req.body.name,
     phone: req.body.phone,
+    owner: req.body.owner,
   });
 
   try {

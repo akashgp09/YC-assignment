@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Editor({ renderMyData }) {
+function Editor({ renderMyData, owner }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
@@ -12,13 +12,12 @@ function Editor({ renderMyData }) {
     setPhone(e.target.value);
   };
   const handleSubmit = async (e) => {
-    console.log("Clicked on Submit");
     e.preventDefault();
     try {
       await fetch(
         process.env.NODE_ENV === "production"
-          ? `${process.env.REACT_APP_WEBSITE_URL}/add`
-          : "http://localhost:5000/add",
+          ? `${process.env.REACT_APP_WEBSITE_URL}/contact/add`
+          : "http://localhost:5000/contact/add",
         {
           method: "POST",
           headers: {
@@ -29,10 +28,11 @@ function Editor({ renderMyData }) {
           body: JSON.stringify({
             name,
             phone,
+            owner,
           }),
         }
       );
-      renderMyData();
+      renderMyData(owner);
       setName("");
       setPhone("");
     } catch (err) {

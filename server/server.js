@@ -23,17 +23,6 @@ mongoose.connect(process.env.DB_MONGO_URI, {
   useCreateIndex: true,
 });
 
-// const connectDB = async () => {
-//   try {
-//     const conn = await mongoose.connect(process.env.DB_MONGO_URI);
-
-//     console.log(`MongoDB Connected: ${conn.connection.host}`);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-// connectDB();
-
 // PORT
 const PORT = process.env.PORT || 5000;
 
@@ -62,8 +51,7 @@ app.use(
 
 if (process.env.NODE_ENV === "production") {
   // Set static folder
-  // app.use(express.static("client/build"));
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static("../client/build"));
 
   app.get("*", (req, res) => {
     res.sendFile(
@@ -72,7 +60,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 // set up routes
-app.use("/", contactRouter);
+app.use("/contact", contactRouter);
 app.use("/auth", authRoutes);
 
 const authCheck = (req, res, next) => {
@@ -89,6 +77,7 @@ const authCheck = (req, res, next) => {
 // if it's already login, send the profile response,
 // otherwise, send a 401 response that the user is not authenticated
 // authCheck before navigating to home page
+
 app.get("/", authCheck, (req, res) => {
   res.status(200).json({
     authenticated: true,

@@ -11,12 +11,23 @@ function App() {
   useEffect(() => {
     authenticate();
   }, []);
-  const renderMyData = async () => {
+  const renderMyData = async (userId) => {
     try {
       const allContacts = await fetch(
         process.env.NODE_ENV === "production"
-          ? `${process.env.REACT_APP_WEBSITE_URL}/`
-          : `http://localhost:5000/`
+          ? `${process.env.REACT_APP_WEBSITE_URL}/contact/contacts`
+          : "http://localhost:5000/contact/contacts",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            owner: userId,
+          }),
+        }
       );
 
       let contactsJsonResponse = await allContacts.json();
@@ -44,7 +55,7 @@ function App() {
       const jsonResponse = await res.json();
       setAuthenticated(true);
       setUser(jsonResponse.user);
-      renderMyData();
+      renderMyData(jsonResponse.user.googleId);
     } catch (error) {
       setAuthenticated(false);
       console.log("Failed to Authenticate");
@@ -87,9 +98,13 @@ function App() {
             </button>
           </div>
 
-          <Editor renderMyData={renderMyData} />
+          <Editor renderMyData={renderMyData} owner={user.googleId} />
 
-          <DisplayContact contacts={contacts} renderMyData={renderMyData} />
+          <DisplayContact
+            contacts={contacts}
+            renderMyData={renderMyData}
+            owner={user.googleId}
+          />
         </>
       ) : (
         <>
